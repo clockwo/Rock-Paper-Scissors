@@ -27,7 +27,11 @@ function getComputerChoice() {
   return Math.floor(Math.random() * maxRandomValue) + 1;
 }
 
-// Function what ask user to input value between 1-3
+// Function what ask user to input choice
+//TODO: Add validation for player input
+function getPlayerChoice() {
+  return prompt('Rock or Paper or Scissors? Write:').toLowerCase();
+}
 
 // Function what make decision if user win
 function isPlayerWin(playerSelection, computerSelection) {
@@ -47,16 +51,52 @@ function isPlayerWin(playerSelection, computerSelection) {
 
 function playRound(playerSelection, computerSelection) {
   if (isPlayerWin(playerSelection, computerSelection)) {
-    return `You Win! ${playerSelection} beats ${computerSelection}`;
+    console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
+    return true;
   } else if (playerSelection === computerSelection) {
-    return `It's a draw!`;
+    console.log(`It's a draw!`);
+    return 'draw';
   } else {
-    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+    console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+    return false;
   }
 }
 
-const computerSelection = getHandSign(getComputerChoice());
-const userSelection = getHandSign(parseInt(prompt('Write number between 1-3')));
-console.log(computerSelection + 'computer');
-console.log(userSelection + 'user');
-console.log(playRound(userSelection, computerSelection));
+function showGameEndResult(computerScore, playerScore) {
+  if (computerScore > playerScore) {
+    console.log(
+      `The game has ended, you lose! Computer has ${computerScore}, you have ${playerScore}`
+    );
+  } else {
+    console.log(
+      `The game has ended, you won! Computer has ${computerScore}, you have ${playerScore}`
+    );
+  }
+}
+
+// function what contain results of each round and call new round
+function game() {
+  const MAX_ROUNDS = 5;
+  let playerScore = 0;
+  let computerScore = 0;
+  let gameContinue = true;
+  let counter = 0;
+  while (gameContinue) {
+    counter++;
+    let computerSelection = getHandSign(getComputerChoice());
+    let playerSelection = getPlayerChoice();
+    let roundResult = playRound(playerSelection, computerSelection);
+    if (roundResult) {
+      playerScore++;
+    } else if (!roundResult) {
+      computerScore++;
+    }
+
+    if (counter === MAX_ROUNDS) {
+      gameContinue = false;
+    }
+  }
+  showGameEndResult(computerScore, playerScore);
+}
+
+game();
