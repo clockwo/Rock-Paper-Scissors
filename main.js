@@ -1,5 +1,5 @@
 //Function what return string value
-function getItem(choice) {
+function getHandSign(choice) {
   switch (choice) {
     case 1:
       return 'rock';
@@ -23,11 +23,34 @@ function getComputerChoice() {
 
 // Function what ask user to input value between 1-3
 
-function playRound(playerSelection, computerSelection) {
-  //check if rock > Scissors
-  //check if Scissors > paper
-  //check if paper > rock
+// Function what make decision if user win
+function isPlayerWin(playerSelection, computerSelection) {
+  const ROCK = 'rock';
+  const PAPER = 'paper';
+  const SCISSORS = 'scissors';
+
+  if (
+    (playerSelection === ROCK && computerSelection === SCISSORS) ||
+    (playerSelection === SCISSORS && computerSelection === PAPER) ||
+    (playerSelection === PAPER && computerSelection === ROCK)
+  ) {
+    return true;
+  }
+  return false;
 }
 
-let computerSelection = getItem(getComputerChoice());
-console.log(computerSelection);
+function playRound(playerSelection, computerSelection) {
+  if (isPlayerWin(playerSelection, computerSelection)) {
+    return `You Win! ${playerSelection} beats ${computerSelection}`;
+  } else if (playerSelection === computerSelection) {
+    return `It's a draw!`;
+  } else {
+    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+  }
+}
+
+const computerSelection = getHandSign(getComputerChoice());
+const userSelection = getHandSign(parseInt(prompt('Write number between 1-3')));
+console.log(computerSelection + 'computer');
+console.log(userSelection + 'user');
+console.log(playRound(userSelection, computerSelection));
