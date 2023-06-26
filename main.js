@@ -1,5 +1,5 @@
 // Error handler function
-function ErrorHandler(message) {
+function errorHandler(message) {
   console.log(message);
 }
 
@@ -16,7 +16,7 @@ function getHandSign(choice) {
       return 'scissors';
 
     default:
-      ErrorHandler('Something went wrong with getHandSign()');
+      errorHandler('Something went wrong with getHandSign()');
       return 'Invalid input';
   }
 }
