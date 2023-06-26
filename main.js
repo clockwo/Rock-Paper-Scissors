@@ -1,3 +1,8 @@
+// Error handler function
+function ErrorHandler(message) {
+  console.log(message);
+}
+
 //Function what return string value
 function getHandSign(choice) {
   switch (choice) {
@@ -11,7 +16,8 @@ function getHandSign(choice) {
       return 'scissors';
 
     default:
-      return;
+      ErrorHandler('Something went wrong with getHandSign()');
+      return 'Invalid input';
   }
 }
 
