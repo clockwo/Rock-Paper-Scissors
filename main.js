@@ -2,11 +2,16 @@ const buttons = document.querySelectorAll('.btn');
 const roundDisplayInfo = document.querySelector('.round-info');
 const playerScoreView = document.querySelector('.player-score');
 const computerScoreView = document.querySelector('.computer-score');
+const gameResultView = document.querySelector('.game-result');
+const endInfo = document.querySelector('.end');
+const resetBtn = document.querySelector('.reset');
+
 const MAX_SCORE = 5;
 let roundResult = '';
 let playerScore = 0;
 let computerScore = 0;
 let currentRound = 0;
+let gameResult = '';
 
 // Error handler function
 function errorHandler(message) {
@@ -74,11 +79,15 @@ function showGameEndResult(computerScore, playerScore) {
     console.log(
       `The game has ended, you lose! Computer has ${computerScore}, you have ${playerScore}`
     );
+    gameResult = `The game has ended, you lose! Computer has ${computerScore}, you have ${playerScore}`;
   } else {
     console.log(
       `The game has ended, you won! Computer has ${computerScore}, you have ${playerScore}`
     );
+    gameResult = `The game has ended, you won! Computer has ${computerScore}, you have ${playerScore}`;
   }
+  gameResultView.innerHTML = gameResult;
+  endInfo.classList.remove('hide');
 }
 
 function update() {
@@ -86,6 +95,14 @@ function update() {
   playerScoreView.innerHTML = playerScore;
   computerScoreView.innerHTML = computerScore;
 }
+
+resetBtn.addEventListener('click', (e) => {
+  playerScore = 0;
+  computerScore = 0;
+  currentRound = 0;
+  endInfo.classList.add('hide');
+  update();
+});
 
 [...buttons].forEach((btn) =>
   btn.addEventListener('click', (e) => {
