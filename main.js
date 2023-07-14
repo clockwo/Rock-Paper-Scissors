@@ -1,3 +1,13 @@
+const buttons = document.querySelectorAll('.btn');
+const roundDisplayInfo = document.querySelector('.round-info');
+const playerScoreView = document.querySelector('.player-score');
+const computerScoreView = document.querySelector('.computer-score');
+const MAX_SCORE = 5;
+let roundResult = '';
+let playerScore = 0;
+let computerScore = 0;
+let currentRound = 0;
+
 // Error handler function
 function errorHandler(message) {
   console.log(message);
@@ -27,12 +37,6 @@ function getComputerChoice() {
   return Math.floor(Math.random() * maxRandomValue) + 1;
 }
 
-// Function what ask user to input choice
-//TODO: Add validation for player input
-function getPlayerChoice() {
-  return prompt('Rock or Paper or Scissors? Write:').toLowerCase();
-}
-
 // Function what make decision if user win
 function isPlayerWin(playerSelection, computerSelection) {
   const ROCK = 'rock';
@@ -49,16 +53,19 @@ function isPlayerWin(playerSelection, computerSelection) {
   return false;
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound(playerSelection) {
+  let computerSelection = getHandSign(getComputerChoice());
   if (isPlayerWin(playerSelection, computerSelection)) {
     console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-    return true;
+    roundResult = `You Win! ${playerSelection} beats ${computerSelection}`;
+    playerScore++;
   } else if (playerSelection === computerSelection) {
     console.log(`It's a draw!`);
-    return 'draw';
+    roundResult = `It's a draw!`;
   } else {
     console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-    return false;
+    roundResult = `You Lose! ${computerSelection} beats ${playerSelection}`;
+    computerScore++;
   }
 }
 
@@ -74,29 +81,19 @@ function showGameEndResult(computerScore, playerScore) {
   }
 }
 
-// function what contain results of each round and call new round
-function game() {
-  const MAX_ROUNDS = 5;
-  let playerScore = 0;
-  let computerScore = 0;
-  let gameContinue = true;
-  let counter = 0;
-  while (gameContinue) {
-    counter++;
-    let computerSelection = getHandSign(getComputerChoice());
-    let playerSelection = getPlayerChoice();
-    let roundResult = playRound(playerSelection, computerSelection);
-    if (roundResult) {
-      playerScore++;
-    } else if (!roundResult) {
-      computerScore++;
-    }
-
-    if (counter === MAX_ROUNDS) {
-      gameContinue = false;
-    }
-  }
-  showGameEndResult(computerScore, playerScore);
+function update() {
+  roundDisplayInfo.innerHTML = roundResult;
+  playerScoreView.innerHTML = playerScore;
+  computerScoreView.innerHTML = computerScore;
 }
 
-game();
+[...buttons].forEach((btn) =>
+  btn.addEventListener('click', (e) => {
+    let playerSelection = btn.dataset.item;
+    playRound(playerSelection);
+    update();
+    if (playerScore === MAX_SCORE || computerScore === MAX_SCORE) {
+      showGameEndResult(computerScore, playerScore);
+    }
+  })
+);
