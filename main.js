@@ -7,18 +7,26 @@ const endInfo = document.querySelector('.end');
 const resetBtn = document.querySelector('.reset');
 
 const MAX_SCORE = 5;
+
+const winningCondition = {
+  rock: 'scissors',
+  paper: 'rock',
+  scissors: 'paper',
+};
+
 let roundResult = '';
 let playerScore = 0;
 let computerScore = 0;
-let currentRound = 0;
-let gameResult = '';
+
+function isEndGame(firstScore, lastScore) {
+  return firstScore === MAX_SCORE || lastScore === MAX_SCORE;
+}
 
 // Error handler function
 function errorHandler(message) {
   console.log(message);
 }
 
-//Function what return string value
 function getHandSign(choice) {
   switch (choice) {
     case 1:
@@ -42,48 +50,37 @@ function getComputerChoice() {
   return Math.floor(Math.random() * maxRandomValue) + 1;
 }
 
-// Function what make decision if user win
 function isPlayerWin(playerSelection, computerSelection) {
-  const ROCK = 'rock';
-  const PAPER = 'paper';
-  const SCISSORS = 'scissors';
-
-  if (
-    (playerSelection === ROCK && computerSelection === SCISSORS) ||
-    (playerSelection === SCISSORS && computerSelection === PAPER) ||
-    (playerSelection === PAPER && computerSelection === ROCK)
-  ) {
-    return true;
-  }
-  return false;
+  return winningCondition[playerSelection] === computerSelection;
 }
 
 function playRound(playerSelection) {
+  if (isEndGame(playerScore, computerScore)) {
+    return;
+  }
+
   let computerSelection = getHandSign(getComputerChoice());
   if (isPlayerWin(playerSelection, computerSelection)) {
-    console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
     roundResult = `You Win! ${playerSelection} beats ${computerSelection}`;
     playerScore++;
   } else if (playerSelection === computerSelection) {
-    console.log(`It's a draw!`);
     roundResult = `It's a draw!`;
   } else {
-    console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
     roundResult = `You Lose! ${computerSelection} beats ${playerSelection}`;
     computerScore++;
+  }
+
+  if (isEndGame(playerScore, computerScore)) {
+    showGameEndResult(computerScore, playerScore);
   }
 }
 
 function showGameEndResult(computerScore, playerScore) {
+  let gameResult = '';
+
   if (computerScore > playerScore) {
-    console.log(
-      `The game has ended, you lose! Computer has ${computerScore}, you have ${playerScore}`
-    );
     gameResult = `The game has ended, you lose! Computer has ${computerScore}, you have ${playerScore}`;
   } else {
-    console.log(
-      `The game has ended, you won! Computer has ${computerScore}, you have ${playerScore}`
-    );
     gameResult = `The game has ended, you won! Computer has ${computerScore}, you have ${playerScore}`;
   }
   gameResultView.innerHTML = gameResult;
@@ -99,7 +96,6 @@ function update() {
 resetBtn.addEventListener('click', (e) => {
   playerScore = 0;
   computerScore = 0;
-  currentRound = 0;
   endInfo.classList.add('hide');
   update();
 });
@@ -109,8 +105,5 @@ resetBtn.addEventListener('click', (e) => {
     let playerSelection = btn.dataset.item;
     playRound(playerSelection);
     update();
-    if (playerScore === MAX_SCORE || computerScore === MAX_SCORE) {
-      showGameEndResult(computerScore, playerScore);
-    }
   })
 );
